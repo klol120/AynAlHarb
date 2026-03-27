@@ -1,0 +1,8 @@
+Place your official logo image here as:
+
+official-logo.png
+
+Expected path used by the app:
+/frontend/public/official-logo.png
+
+You can replace this file with your image file.

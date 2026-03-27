@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../backend/src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum SummaryStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model WeeklySummary {
+  id             Int              @id @default(autoincrement())
+  titleEn        String
+  titleAr        String
+  subtitleEn     String?
+  subtitleAr     String?
+  weekStart      DateTime
+  weekEnd        DateTime
+  totalIncidents Int
+  dailyAverage   Float
+  maxRangeKm     Float?
+  notesEn        String?
+  notesAr        String?
+  coverImageUrl  String?
+  status         SummaryStatus    @default(DRAFT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  statBlocks     SummaryStatBlock[]
+  incidents      IncidentRecord[]
+}
+
+model SummaryStatBlock {
+  id              Int           @id @default(autoincrement())
+  weeklySummaryId Int
+  labelEn         String
+  labelAr         String
+  value           Int
+  icon            String?
+  displayOrder    Int           @default(0)
+  groupName       String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  weeklySummary   WeeklySummary @relation(fields: [weeklySummaryId], references: [id], onDelete: Cascade)
+
+  @@index([weeklySummaryId, displayOrder])
+}
+
+model IncidentRecord {
+  id              Int           @id @default(autoincrement())
+  weeklySummaryId Int
+  titleEn         String
+  titleAr         String
+  descriptionEn   String?
+  descriptionAr   String?
+  recordDate      DateTime
+  count           Int           @default(1)
+  category        String
+  locationNameEn  String?
+  locationNameAr  String?
+  latitude        Float?
+  longitude       Float?
+  sourceId        Int?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  weeklySummary   WeeklySummary @relation(fields: [weeklySummaryId], references: [id], onDelete: Cascade)
+  source          Source?       @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+
+  @@index([weeklySummaryId, category])
+  @@index([sourceId])
+}
+
+model Source {
+  id        Int              @id @default(autoincrement())
+  name      String
+  url       String?
+  note      String?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  incidents IncidentRecord[]
+}
