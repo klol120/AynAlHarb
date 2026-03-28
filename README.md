@@ -1,4 +1,4 @@
----
+
 
 ## Overview
 
@@ -12,7 +12,6 @@ The system transforms raw, unstructured field reports into:
 
 This project is currently in an early but functional stage, with a working ingestion pipeline and live dashboard integration.
 
----
 
 ## Architecture
 
@@ -42,7 +41,7 @@ The system is composed of three main layers:
 - Outputs:
   - `incident_candidates.json`
 
----
+
 
 ### 3. Application Layer (Dashboard)
 
@@ -63,7 +62,7 @@ Key endpoints:
 - Tailwind CSS
 - Recharts for analytics
 
----
+
 
 ## Key Features Implemented
 
@@ -77,7 +76,7 @@ Key endpoints:
   - Post type
   - Extracted metadata (event, weapon, location)
 
----
+
 
 ### Telegram Collector
 - Uses Telethon (Telegram API)
@@ -87,7 +86,6 @@ Key endpoints:
   - Live streaming updates
 - Stores structured JSON lines
 
----
 
 ### Parsing Engine (v1)
 - Rule-based extraction
@@ -102,7 +100,6 @@ Key endpoints:
   - Location extraction
   - Confidence scoring
 
----
 
 ### Admin Panel
 - Unified data editor
@@ -112,7 +109,7 @@ Key endpoints:
   - Weapon usage
 - JWT authentication
 
----
+
 
 ### Analytics Dashboard
 - Operations trend charts
@@ -120,13 +117,13 @@ Key endpoints:
 - Weapon distribution
 - Weekly summaries
 
----
+
 
 ## Project Structure
 
 AynAlHarb/ │ ├── backend/ │   ├── src/ │   │   ├── routes/ │   │   ├── prisma/ │   │   └── app.ts │ ├── frontend/ │   ├── src/ │   │   ├── components/ │   │   ├── pages/ │   │   ├── lib/ │   │   └── types.ts │ ├── telegram_collector.py ├── parse_candidates.py ├── telegram_feed.jsonl ├── incident_candidates.json └── run-all.bat
 
----
+
 
 ## Setup Instructions
 
@@ -144,7 +141,7 @@ Python:
 
 pip install telethon
 
----
+
 
 ### 2. Configure environment
 
@@ -152,7 +149,7 @@ Create `.env` in root:
 
 TELEGRAM_FEED_PATH="C:/Users/Charlie/AynAlHarb/telegram_feed.jsonl"
 
----
+
 
 ### 3. Run everything
 
@@ -164,13 +161,13 @@ Or manually:
 
 python telegram_collector.py npm run dev:backend npm run dev:frontend
 
----
+
 
 ## Data Flow
 
 Telegram Channels ↓ Telethon Collector ↓ telegram_feed.jsonl ↓ Parser (parse_candidates.py) ↓ incident_candidates.json ↓ Backend API ↓ Frontend Dashboard (Live Feed + Analytics)
 
----
+
 
 ## Current Limitations
 
@@ -181,7 +178,7 @@ Telegram Channels ↓ Telethon Collector ↓ telegram_feed.jsonl ↓ Parser (par
 - No moderation/review workflow implemented yet
 - No real-time websocket system (polling used instead)
 
----
+
 
 ## Next Steps (Planned)
 
@@ -193,7 +190,7 @@ Telegram Channels ↓ Telethon Collector ↓ telegram_feed.jsonl ↓ Parser (par
 - UI/UX redesign into command center layout
 - Source credibility and confidence tracking
 
----
+
 
 ## Security Notes
 
@@ -203,10 +200,10 @@ Telegram Channels ↓ Telethon Collector ↓ telegram_feed.jsonl ↓ Parser (par
 
 *.session *.session-journal telegram_feed.jsonl incident_candidates.json .env
 
----
+
 
 ## License
 
 Private project. Not licensed for public reuse at this stage.
 
----
+
