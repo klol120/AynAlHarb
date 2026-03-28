@@ -38,6 +38,27 @@ export interface IncidentRecord {
   source?: Source | null;
 }
 
+export interface TelegramFeedItem {
+  source?: string;
+  chat_id?: number | string;
+  message_id?: number;
+  date_utc?: string;
+  text?: string;
+  sender_id?: number | string | null;
+  views?: number | null;
+  forwards?: number | null;
+  has_media?: boolean;
+  collected_at_utc?: string;
+  mode?: string;
+  post_kind?: string;
+  event_type?: string;
+  weapon?: string | null;
+  target?: string | null;
+  location?: string | null;
+  confidence?: number | null;
+  raw_text?: string;
+}
+
 export interface WeeklySummary {
   id: number;
   titleEn: string;

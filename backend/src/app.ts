@@ -5,6 +5,7 @@ import summaryRoutes from "./routes/weeklySummaries.js";
 import statBlockRoutes from "./routes/statBlocks.js";
 import incidentRoutes from "./routes/incidents.js";
 import sourceRoutes from "./routes/sources.js";
+import telegramFeedRoutes from "./routes/telegramFeed.js";
 
 export const app = express();
 
@@ -20,6 +21,7 @@ app.use("/api/weekly-summaries", summaryRoutes);
 app.use("/api/stat-blocks", statBlockRoutes);
 app.use("/api/incidents", incidentRoutes);
 app.use("/api/sources", sourceRoutes);
+app.use("/api/telegram-feed", telegramFeedRoutes);
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);

@@ -1,4 +1,4 @@
-import type { IncidentRecord, Source, SummaryStatBlock, WeeklySummary } from "../types";
+import type { IncidentRecord, Source, SummaryStatBlock, WeeklySummary, TelegramFeedItem } from "../types";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
@@ -70,5 +70,8 @@ export const api = {
   updateSource: (id: number, payload: Partial<Source>) =>
     request<Source>(`/sources/${id}`, { method: "PUT", body: JSON.stringify(payload) }),
 
-  deleteSource: (id: number) => request<void>(`/sources/${id}`, { method: "DELETE" })
+  deleteSource: (id: number) => request<void>(`/sources/${id}`, { method: "DELETE" }),
+
+  getTelegramFeed: (limit = 20) =>
+    request<TelegramFeedItem[]>(`/telegram-feed?limit=${limit}`)
 };

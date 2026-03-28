@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../../context/LanguageContext";
+import TelegramLiveFeed from "../../components/TelegramLiveFeed";
 import {
   consolidatedOverview,
   enemyLossCategories,
@@ -190,7 +191,7 @@ export default function HomePage(): JSX.Element {
           </div>
         </div>
       </section>
-
+      <TelegramLiveFeed />
       <section className="card mt-6 p-4 text-center">
         <p className="text-xs text-slate-500">
           {t("Last Updated", "آخر تحديث")}: {lastUpdated?.toLocaleString(language === "ar" ? "ar-SA" : "en-US")}
