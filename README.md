@@ -1,200 +1,212 @@
-# Ayn Al Harb | عين الحرب
+---
 
-Neutral bilingual monitoring dashboard for weekly conflict-related incident statistics.
+## Overview
 
-This platform is designed as a newsroom-style analytics and record-keeping system. It focuses on transparent, data-driven reporting and does not promote propaganda or glorification.
+Eye of War is a real-time conflict intelligence platform that ingests, processes, and visualizes front-line reports from Telegram sources into structured operational insights.
 
-## Tech Stack
+The system transforms raw, unstructured field reports into:
+- Live intelligence feed
+- Structured incident candidates
+- Operational analytics dashboards
+- Admin-controlled datasets
 
-- Frontend: React + Vite + Tailwind CSS + Recharts
-- Backend: Node.js + Express (TypeScript)
-- Database: SQLite + Prisma ORM
-- Auth: JWT-based admin authentication
-- Optional map-ready support: incidents include latitude/longitude fields for map integration
+This project is currently in an early but functional stage, with a working ingestion pipeline and live dashboard integration.
+
+---
+
+## Architecture
+
+The system is composed of three main layers:
+
+### 1. Data Ingestion (Telegram Collector)
+- Built with Python and Telethon
+- Connects to public Telegram channels/groups
+- Performs:
+  - Historical backfill
+  - Live message listening
+- Outputs raw data into:
+  - `telegram_feed.jsonl`
+
+---
+
+### 2. Processing Layer (Parser)
+- Parses raw Telegram messages into structured candidates
+- Extracts:
+  - Event type
+  - Weapon type
+  - Target
+  - Location
+  - Time
+  - Statement number
+  - Confidence score
+- Outputs:
+  - `incident_candidates.json`
+
+---
+
+### 3. Application Layer (Dashboard)
+
+#### Backend
+- Node.js + Express + TypeScript
+- Prisma ORM with SQLite
+- REST API
+
+Key endpoints:
+- `/api/weekly-summaries`
+- `/api/stat-blocks`
+- `/api/incidents`
+- `/api/sources`
+- `/api/telegram-feed` (custom live feed)
+
+#### Frontend
+- React + Vite + TypeScript
+- Tailwind CSS
+- Recharts for analytics
+
+---
+
+## Key Features Implemented
+
+### Live Telegram Feed
+- Reads directly from `telegram_feed.jsonl`
+- Displays latest messages
+- Auto-refresh every 10 seconds
+- Shows:
+  - Source
+  - Timestamp
+  - Post type
+  - Extracted metadata (event, weapon, location)
+
+---
+
+### Telegram Collector
+- Uses Telethon (Telegram API)
+- Supports:
+  - Public channel monitoring
+  - Historical backfill
+  - Live streaming updates
+- Stores structured JSON lines
+
+---
+
+### Parsing Engine (v1)
+- Rule-based extraction
+- Detects:
+  - Formal statements
+  - Video reports
+  - Media-only posts
+- Generates:
+  - Event classification
+  - Weapon detection
+  - Target identification
+  - Location extraction
+  - Confidence scoring
+
+---
+
+### Admin Panel
+- Unified data editor
+- Edit:
+  - Total operations
+  - Regional breakdown
+  - Weapon usage
+- JWT authentication
+
+---
+
+### Analytics Dashboard
+- Operations trend charts
+- Category breakdowns
+- Weapon distribution
+- Weekly summaries
+
+---
 
 ## Project Structure
 
-- `frontend/` React public and admin dashboards
-- `backend/` Express API, auth, and business routes
-- `prisma/` Prisma schema, migrations, and seed data
-- `shared/` Shared TypeScript DTO types
-- `.env.example` Environment template
+AynAlHarb/ │ ├── backend/ │   ├── src/ │   │   ├── routes/ │   │   ├── prisma/ │   │   └── app.ts │ ├── frontend/ │   ├── src/ │   │   ├── components/ │   │   ├── pages/ │   │   ├── lib/ │   │   └── types.ts │ ├── telegram_collector.py ├── parse_candidates.py ├── telegram_feed.jsonl ├── incident_candidates.json └── run-all.bat
 
-## Features
-
-### Public Website
-
-- Home/Dashboard page
-- Weekly Summary page (`/weekly/:id`)
-- Archive page
-- Analytics page
-- About/Methodology page
-- KPI cards and weekly hero card
-- Large bilingual stat block section:
-  - English: Items Recorded This Week
-  - Arabic: العناصر المسجلة هذا الأسبوع
-- Bar, pie, and line charts
-- Archive summaries and incident table
-- Responsive desktop/mobile layout
-- English/Arabic language toggle with RTL/LTR switching
-
-### Admin Dashboard
-
-- Secure login page (`/admin/login`)
-- Overview dashboard
-- Weekly summaries management
-- Category/stat block management
-- Incident records management
-- Source/reference management
-- Create/edit/delete controls
-- Publish/unpublish controls
-- Form validation
-- Toast notifications
-- Delete confirmation modal
-
-## Data Models (Prisma)
-
-Implemented in `prisma/schema.prisma`:
-
-- `AdminUser`
-- `WeeklySummary`
-- `SummaryStatBlock`
-- `IncidentRecord`
-- `Source`
-
-## API Endpoints
-
-Base: `/api`
-
-- Auth:
-  - `POST /auth/login`
-
-- Weekly summaries:
-  - `GET /weekly-summaries`
-  - `GET /weekly-summaries/:id`
-  - `POST /weekly-summaries` (auth)
-  - `PUT /weekly-summaries/:id` (auth)
-  - `DELETE /weekly-summaries/:id` (auth)
-
-- Stat blocks:
-  - `GET /stat-blocks/summary/:weeklySummaryId`
-  - `POST /stat-blocks` (auth)
-  - `PUT /stat-blocks/:id` (auth)
-  - `DELETE /stat-blocks/:id` (auth)
-
-- Incidents:
-  - `GET /incidents/summary/:weeklySummaryId`
-  - `POST /incidents` (auth)
-  - `PUT /incidents/:id` (auth)
-  - `DELETE /incidents/:id` (auth)
-
-- Sources:
-  - `GET /sources`
-  - `POST /sources` (auth)
-  - `PUT /sources/:id` (auth)
-  - `DELETE /sources/:id` (auth)
+---
 
 ## Setup Instructions
 
-1. Install dependencies:
+### 1. Install dependencies
 
-```bash
-npm install
-```
+Backend:
 
-2. Create environment file from template:
+cd backend npm install
 
-```bash
-cp .env.example .env
-```
+Frontend:
 
-Windows PowerShell alternative:
+cd frontend npm install
 
-```powershell
-Copy-Item .env.example .env
-```
+Python:
 
-3. Run Prisma migration and seed:
+pip install telethon
 
-```bash
-npm run prisma:migrate -- --name init
-npm run prisma:seed
-```
+---
 
-4. Start backend and frontend (two terminals):
+### 2. Configure environment
 
-```bash
-npm run dev:backend
-npm run dev:frontend
-```
+Create `.env` in root:
 
-5. Open the frontend:
+TELEGRAM_FEED_PATH="C:/Users/Charlie/AynAlHarb/telegram_feed.jsonl"
 
-- `http://localhost:5173`
+---
 
-API runs on:
+### 3. Run everything
 
-- `http://localhost:4000`
+Using batch script:
 
-## Default Admin Credentials (Seed)
+run-all.bat
 
-- Email: `admin@aynalharb.local`
-- Password: `Admin123!`
+Or manually:
 
-You can change these in `.env` before seeding.
+python telegram_collector.py npm run dev:backend npm run dev:frontend
 
-## Seed Data Included
+---
 
-- 1 sample weekly summary
-- 12 bilingual stat block rows
-- 9 incident records
-- 2 sources
-- 1 admin user
+## Data Flow
 
-All values are editable from admin pages.
+Telegram Channels ↓ Telethon Collector ↓ telegram_feed.jsonl ↓ Parser (parse_candidates.py) ↓ incident_candidates.json ↓ Backend API ↓ Frontend Dashboard (Live Feed + Analytics)
 
-## How to edit weekly numbers
+---
 
-1. Login at `/admin/login`.
-2. Go to Admin -> Weekly Summaries.
-3. Use `Edit Totals` on a summary card to update:
-   - total incidents
-   - daily average
-   - max range
-4. Save and refresh public pages to see updated KPI and hero metrics.
+## Current Limitations
 
-## How to add a new bilingual stat row
+- No deduplication of similar posts yet
+- Location extraction is partial in some cases
+- Media-only posts are not linked to text posts
+- Data is file-based, not database-driven yet
+- No moderation/review workflow implemented yet
+- No real-time websocket system (polling used instead)
 
-1. Login to admin.
-2. Open Admin -> Stat Blocks.
-3. Select the target weekly summary.
-4. Fill the form fields:
-   - English label
-   - Arabic label
-   - count value
-   - optional icon
-   - display order
-   - optional group/category
-5. Click `Add Stat Row`.
+---
 
-The row appears in the big public section:
-- Items Recorded This Week
-- العناصر المسجلة هذا الأسبوع
+## Next Steps (Planned)
 
-## How to publish a weekly summary
+- Deduplication engine for repeated posts
+- Review queue for validating incidents
+- Database integration for Telegram messages
+- Map-based visualization of incidents
+- Improved NLP parsing for Arabic and English
+- UI/UX redesign into command center layout
+- Source credibility and confidence tracking
 
-1. Login to admin.
-2. Go to Admin -> Weekly Summaries.
-3. On the selected summary, click `Publish`.
-4. To hide it later, click `Unpublish`.
+---
 
-Published summaries are shown on public pages by default.
+## Security Notes
 
-## Notes
+- Do not expose your Telegram `api_hash`
+- Do not commit `.session` files
+- Add to `.gitignore`:
 
-- The frontend currently renders map-ready coordinates in weekly view. If you want an interactive map layer, you can integrate Leaflet easily using the incident latitude/longitude data.
-- Build command:
+*.session *.session-journal telegram_feed.jsonl incident_candidates.json .env
 
-```bash
-npm run build
-```
+---
+
+## License
+
+Private project. Not licensed for public reuse at this stage.
+
+---
